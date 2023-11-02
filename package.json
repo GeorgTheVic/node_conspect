@@ -1,0 +1,19 @@
+{
+  "name": "from_ulbi",
+  "version": "1.0.0",
+  "description": "test trainig for node",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env PORT=5000 NODE_ENV=production INFO='new srting' node index.js"
+  },
+  "author": "Georg",
+  "license": "ISC",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
