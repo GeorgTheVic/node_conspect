@@ -403,19 +403,42 @@
 
 // !_______ события events
 
-const Emitter = require('events');
+// const Emitter = require('events');
 
-const emitter = new Emitter();
+// const emitter = new Emitter();
 
-emitter.on('message', (data, second, third) => {
-  console.log('Вы прислалии сообщение ' + data);
-  console.log('Второй аргумент ' + second);
-})
+// emitter.on('message', (data, second, third) => {
+//   console.log('Вы прислалии сообщение ' + data);
+//   console.log('Второй аргумент ' + second);
+// })
 
-const MESSAGE = process.env.message || '';
+// const MESSAGE = process.env.message || '';
 
-if (MESSAGE) {
-  emitter.emit('message', MESSAGE, 123)
-} else {
-  emitter.emit('message', 'Вы не указали сообщение')
-}
+// if (MESSAGE) {
+//   emitter.emit('message', MESSAGE, 123)
+// } else {
+//   emitter.emit('message', 'Вы не указали сообщение')
+// }
+
+// emmiter.once('message') //? создаёт событие единожды
+
+// emmiter.emit('message')
+// emmiter.emit('message')
+// emmiter.emit('message')
+// emmiter.emit('message')
+
+// emitter.removeAllListeners() //? удалить все слушатели
+// emitter.removeListeners('message') //? удалить конкретный слушатель
+
+
+//! _____ stream (не тоже самое, что и thread)
+//? Стримы нужны для передачи больших файлов. Их читают по одному через стримы и передают (по умолчанию, размер одного файла 64 (Кбайта) килобайта)
+
+//? Стримов есть 4 типа стримов
+//? Readable – для чтения
+//? Writable – для записи
+//? Duplex – для чтения и записи Readable + Writable
+//? Transform – как Duplex но может менять данные в процессе чтения
+
+
+
