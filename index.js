@@ -440,5 +440,27 @@
 //? Duplex – для чтения и записи Readable + Writable
 //? Transform – как Duplex но может менять данные в процессе чтения
 
+//? Предположим, что есть текстовый файл text.txt, который весит очень много
 
+const fs = require('fs')
+const path = require('path')
+
+// fs.readFile(path.resolve(__dirname, 'text.txt'), (err, data) => {
+//   if (err) {
+//     throw err;
+//   } 
+//   console.log(data) //? файл прочитается полоностью, покажет его вес и будет делать это долго
+// })
+
+//? лучше будет создать стрим
+
+const stream = fs.createReadStream(path.resolve(__dirname, 'test.txt'))
+
+stream.on('data', (chunk) => {
+  console.log(chunk) // ? <Buffer d0 bf d0 b5 d1 80 d0 b5 d0 bf d0 b8 d1 81 d0 b0 d0 bd d0 bd d1 8b d0 b5 20 d0 b4 d0 b0 d0 bd d0 bd d1 8b d0 b5 d1 81 d0 be d0 b7 d0 b4 d0 b0 d0 bb d0 ... 59 more bytes> //? если файл будет большой, он создасть несколько кусков по 64 Кбайта
+})
+
+stream.on('end', () => console.log('Закончил читать'))
+stream.on('open', () => console.log('Начал читать'))
+stream.on('error', (e) => console.log(e))
 
