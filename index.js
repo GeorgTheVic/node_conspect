@@ -442,8 +442,9 @@
 
 //? Предположим, что есть текстовый файл text.txt, который весит очень много
 
-const fs = require('fs')
-const path = require('path')
+// const fs = require('fs')
+// const { request } = require('http')
+// const path = require('path')
 
 // fs.readFile(path.resolve(__dirname, 'text.txt'), (err, data) => {
 //   if (err) {
@@ -454,13 +455,60 @@ const path = require('path')
 
 //? лучше будет создать стрим
 
-const stream = fs.createReadStream(path.resolve(__dirname, 'test.txt'))
+// const stream = fs.createReadStream(path.resolve(__dirname, 'test.txt'), {encoding: 'utf-8'}) //? можем указать путь, имя файла и кодировку
 
-stream.on('data', (chunk) => {
-  console.log(chunk) // ? <Buffer d0 bf d0 b5 d1 80 d0 b5 d0 bf d0 b8 d1 81 d0 b0 d0 bd d0 bd d1 8b d0 b5 20 d0 b4 d0 b0 d0 bd d0 bd d1 8b d0 b5 d1 81 d0 be d0 b7 d0 b4 d0 b0 d0 bb d0 ... 59 more bytes> //? если файл будет большой, он создасть несколько кусков по 64 Кбайта
+// stream.on('data', (chunk) => {
+//   console.log(chunk) // ? <Buffer d0 bf d0 b5 d1 80 d0 b5 d0 bf d0 b8 d1 81 d0 b0 d0 bd d0 bd d1 8b d0 b5 20 d0 b4 d0 b0 d0 bd d0 bd d1 8b d0 b5 d1 81 d0 be d0 b7 d0 b4 d0 b0 d0 bb d0 ... 59 more bytes> //? если файл будет большой, он создасть несколько кусков по 64 Кбайта
+// })
+
+// stream.on('end', () => console.log('Закончил читать'))
+// stream.on('open', () => console.log('Начал читать'))
+// stream.on('error', (e) => console.log(e)) //? обязательно указывать обработку ошибок
+
+// const writableStream = fs.createWriteStream(path.resolve(__dirname, 'test2.txt'))
+
+// for(let i = 0; i < 20; i++) {
+//   writableStream.write(i + '\n')
+// }
+
+// writableStream.end() //? обязательно нужно заканчивать writableStream
+// writableStream.close() //? тоже закрывает writableStream
+// writableStream.destroy() //? тоже закрывает writableStream
+// writableStream.on('error') //? тоже закрывает writableStream
+
+// const http = require('http')
+
+// http.createServer((req, res) => {
+//   //req - readable stream
+//   //res - writable stream
+//   const stream = fs.createReadStream(path.resolve(__dirname, 'test3.txt'))
+
+//   //? стрим закончит читать файл раньше, чем пользователь его скачает
+//   // stream.on('data', chunk => res.write(chunk))  
+//   // stream.on('end', chunk => res.end())  
+//   //? для этого придумали метод pipe
+//   stream.pipe(res)
+// })
+
+//!____ создание своего http сервера
+
+const http = require('http')
+
+const PORT = process.env.PORT || 5000
+
+const server = http.createServer((req, res) => {
+  // res.writeHead(200, {
+  //   'Content-type': 'text/html; charset=utf-8'
+  // })
+  // res.end('<h1>Сервер работает!</h1>')
+
+  if (req.url === '/users') {
+    return res.end('USERS')
+  }
+  if (req.url === '/posts') {
+    return req.end('POSTS')
+  }
+  res.end(req.url)
 })
 
-stream.on('end', () => console.log('Закончил читать'))
-stream.on('open', () => console.log('Начал читать'))
-stream.on('error', (e) => console.log(e))
-
+server.listen(PORT, () => console.log(`Server started on PORT: ${PORT}`))
