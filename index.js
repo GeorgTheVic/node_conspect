@@ -500,15 +500,21 @@ const server = http.createServer((req, res) => {
   // res.writeHead(200, {
   //   'Content-type': 'text/html; charset=utf-8'
   // })
-  // res.end('<h1>Сервер работает!</h1>')
+  // res.end('<h1>Сервер работает!</h1><button>Submit</button>')
+
+  res.writeHead(200, {
+    'Content-type': 'application/json'
+  })
 
   if (req.url === '/users') {
-    return res.end('USERS')
+    return res.end(JSON.stringify([{
+      id: 1, name: 'Georg'
+    }]))
   }
   if (req.url === '/posts') {
     return req.end('POSTS')
   }
-  res.end(req.url)
+  res.end('<h1>Сервер работает!</h1><button>Submit</button>')
 })
 
 server.listen(PORT, () => console.log(`Server started on PORT: ${PORT}`))
