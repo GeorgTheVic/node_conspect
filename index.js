@@ -494,7 +494,63 @@
 
 const http = require('http')
 
+const EventEmitter = require('events')
+
 const PORT = process.env.PORT || 5000
+
+const emitter = new EventEmitter()
+
+//!____ создание своего фреймворка
+
+class Router {
+  constructor() {
+    this.endpoints = {}
+  }
+
+  request(metod = 'GET', path, handler) {
+    if(!this.endpoints[path]) {
+      this.endpoints[path] = {}
+    }
+
+    const endpoint = this.endpoints[path]
+
+    if(endpoint[metod]) {
+      throw new Error(`[${metod}] по этому адресу ${path} уже существует`)
+    }
+
+    endpoint[metod] = handler
+
+    emitter.on(`[${path}]:[${metod}]`, (req, res) => {
+      handler(req, res)
+    })
+  }
+
+  get(path, handler) {
+    this.request('GET', path, handler)
+  }
+  
+  post(path, handler) {
+    this.request('POST', path, handler)
+  }
+
+  put(path, handler) {
+    this.request('PUT', path, handler)
+  }
+
+  delete(path, handler) {
+    this.request('DELETE', path, handler)
+  }
+}
+
+const router = new Router()
+
+router.get('/users', (req, res) => {
+  res.end('YOU SEND REQUEST TO /USERS')
+})
+
+router.get('/posts', (req, res) => {
+  res.end('YOU SEND REQUEST TO /POSTS')
+})
 
 const server = http.createServer((req, res) => {
   // res.writeHead(200, {
@@ -502,22 +558,27 @@ const server = http.createServer((req, res) => {
   // })
   // res.end('<h1>Сервер работает!</h1><button>Submit</button>')
 
-  res.writeHead(200, {
-    'Content-type': 'application/json'
-  })
+  // res.writeHead(200, {
+  //   'Content-type': 'application/json'
+  // })
 
-  if (req.url === '/users') {
-    return res.end(JSON.stringify([{
-      id: 1, name: 'Georg'
-    }]))
+  // if (req.url === '/users') {
+  //   return res.end(JSON.stringify([{
+  //     id: 1, name: 'Georg'
+  //   }]))
+  // }
+  // if (req.url === '/posts') {
+  //   return req.end('POSTS')
+  // }
+  // res.end('<h1>Сервер работает!</h1><button>Submit</button>')
+
+  const emitted = emitter.emit(`[${req.url}]:[${req.method}]`, req, res)
+
+  if(!emitted) {
+    res.end()
   }
-  if (req.url === '/posts') {
-    return req.end('POSTS')
-  }
-  res.end('<h1>Сервер работает!</h1><button>Submit</button>')
 })
 
 server.listen(PORT, () => console.log(`Server started on PORT: ${PORT}`))
 
 
-//!____ создание своего фреймворка
