@@ -492,17 +492,19 @@
 
 //!____ создание своего http сервера
 
-const http = require('http')
+// const http = require('http')
 
-const EventEmitter = require('events')
+// const EventEmitter = require('events')
+
+const userRouter = require('./src/user-router')
 
 const PORT = process.env.PORT || 5000
 
-const emitter = new EventEmitter()
+// const emitter = new EventEmitter()
 
 //!____ создание своего фреймворка
 
-const Router = require('./frameworks/Router')
+// const Router = require('./frameworks/Router')
 
 const Application = require('./frameworks/Application')
 
@@ -546,17 +548,17 @@ const Application = require('./frameworks/Application')
 //   }
 // }
 
-const router = new Router()
+// const router = new Router()
 
 const app = new Application()
 
-router.get('/users', (req, res) => {
-  res.end('YOU SEND REQUEST TO /USERS')
-})
+// router.get('/users', (req, res) => {
+//   res.end('YOU SEND REQUEST TO /USERS')
+// })
 
-router.get('/posts', (req, res) => {
-  res.end('YOU SEND REQUEST TO /POSTS')
-})
+// router.get('/posts', (req, res) => {
+//   res.end('YOU SEND REQUEST TO /POSTS')
+// })
 
 // const server = http.createServer((req, res) => {
   // res.writeHead(200, {
@@ -587,6 +589,6 @@ router.get('/posts', (req, res) => {
 
 // server.listen()
 
-app.addRouter(router)
+app.addRouter(userRouter)
 
 app.listen(PORT, () => console.log(`Server started on PORT: ${PORT}`))
