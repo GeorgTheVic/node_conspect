@@ -508,6 +508,12 @@ const PORT = process.env.PORT || 5000
 
 const Application = require('./frameworks/Application')
 
+const jsonParser = require('./frameworks/parseJson')
+
+const parseUrl = require('./frameworks/parseUrl')
+
+const mongoose = require('mongoose');
+
 // class Router {
 //   constructor() {
 //     this.endpoints = {}
@@ -589,6 +595,19 @@ const app = new Application()
 
 // server.listen()
 
+app.use(jsonParser)
+app.use(parseUrl('http://locahost:5000'))
+
 app.addRouter(userRouter)
 
-app.listen(PORT, () => console.log(`Server started on PORT: ${PORT}`))
+const start = async () => {
+  try {
+    await mongoose.connect('mongodb+srv://georgthevic:6vLxWO5kTYSqKQnj@node-js-conspect.dcnuu0h.mongodb.net/?retryWrites=true&w=majority&appName=node-js-conspect');
+
+    app.listen(PORT, () => console.log(`Server started on PORT: ${PORT}`))
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+start()
